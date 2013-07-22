@@ -1,16 +1,13 @@
-ROS Navigation Stack
-====================
+Adaptive Monte Carlo Localization library for ROS - Version 2
+=============================================================
 
-A 2D navigation stack that takes in information from odometry, sensor
-streams, and a goal pose and outputs safe velocity commands that are sent
-to a mobile base.
+AMCL is a probabilistic localization system for a robot moving in
+2D. It implements the adaptive (or KLD-sampling) Monte Carlo
+localization approach (as described by Dieter Fox), which uses a
+particle filter to track the pose of a robot against a known map.
+It is derived, with thanks, from Andrew Howard's excellent
+'amcl' Player driver.
 
-Related stacks:
+The original ROS wrapper for amcl can be found in the navigation stack:
+http://github.com/ros-planning/navigation.
 
- * http://github.com/ros-planning/navigation_tutorials
- * http://github.com/ros-planning/navigation_experimental
-
-For discussion of ROS "hydro" release development, please check out the 
-https://groups.google.com/group/ros-sig-navigation mailing list and see
-the SIG pages at http://www.ros.org/wiki/sig/Navigation and
-http://www.ros.org/wiki/hydro/Planning/Navigation.

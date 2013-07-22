@@ -1,5 +1,5 @@
 <package>
-    <name>amcl</name>
+    <name>amcl_ros</name>
     <version>1.11.0</version>
     <description>
         <p>
@@ -30,12 +30,14 @@
     <build_depend>nav_msgs</build_depend>
     <build_depend>std_srvs</build_depend>
     <build_depend>dynamic_reconfigure</build_depend>
+    <build_depend>libamcl</build_depend>
 
     <run_depend>roscpp</run_depend>
     <run_depend>roslib</run_depend>
     <run_depend>rostest</run_depend>
     <run_depend>dynamic_reconfigure</run_depend>
     <run_depend>tf</run_depend>
+    <run_depend>libamcl</run_depend>
 
     <test_depend>map_server</test_depend>
     <test_depend>rosbag</test_depend>

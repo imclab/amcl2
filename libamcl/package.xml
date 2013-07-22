@@ -1,0 +1,24 @@
+<package>
+    <name>libamcl</name>
+    <version>1.0.0</version>
+    <description>
+        <p>
+            AMCL is a probabilistic localization system for a robot moving in
+            2D. It implements the adaptive (or KLD-sampling) Monte Carlo
+            localization approach (as described by Dieter Fox), which uses a
+            particle filter to track the pose of a robot against a known map.
+        </p>
+        <p>
+            This library is derived, with thanks, from Andrew Howard's excellent
+            'amcl' Player driver.
+        </p>
+    </description>
+    <url>http://ros.org/wiki/libamcl</url>
+    <author>Brian P. Gerkey</author>
+    <author>contradict@gmail.com</author>
+    <maintainer email="dgossow@willowgarage.com">David Gossow</maintainer>
+    <license>LGPL</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+
+</package>

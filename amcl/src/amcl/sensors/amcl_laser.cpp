@@ -33,6 +33,8 @@
 #include <assert.h>
 #include <unistd.h>
 
+#include <iostream>
+
 #include "amcl_laser.h"
 
 using namespace amcl;
@@ -250,9 +252,13 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
       p += pz*pz*pz;
     }
 
+    std::cout << p << " ";
+
     sample->weight *= p;
     total_weight += sample->weight;
   }
+
+  std::cout << std::endl;
 
   return(total_weight);
 }

@@ -252,13 +252,13 @@ double AMCLLaser::LikelihoodFieldModel(AMCLLaserData *data, pf_sample_set_t* set
       p += pz*pz*pz;
     }
 
-    std::cout << p << " ";
+    //std::cout << p << " ";
 
     sample->weight *= p;
     total_weight += sample->weight;
   }
 
-  std::cout << std::endl;
+  //std::cout << std::endl;
 
   return(total_weight);
 }

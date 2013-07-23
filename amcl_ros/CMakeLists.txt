@@ -16,6 +16,7 @@ find_package(Boost REQUIRED)
 # dynamic reconfigure
 generate_dynamic_reconfigure_options(
     cfg/AMCL.cfg
+    cfg/AmclLaser.cfg
 )
 
 catkin_package(
@@ -26,9 +27,18 @@ catkin_package(
         tf
 )
 
-add_executable(amcl src/amcl_node.cpp)
+add_executable(amcl
+  src/amcl_node.cpp
+  src/amcl_wrapper.cpp
+  src/amcl_laser_wrapper.cpp
+  src/amcl_map_wrapper.cpp
+  )
+
 add_dependencies(amcl amcl_gencfg)
-include_directories(${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
+include_directories(
+  include
+  ${Boost_INCLUDE_DIRS}
+  ${catkin_INCLUDE_DIRS})
 
 target_link_libraries(amcl
     ${Boost_LIBRARIES}

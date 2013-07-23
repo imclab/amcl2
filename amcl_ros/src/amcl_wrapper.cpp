@@ -50,8 +50,6 @@ pf_vector_t uniformPoseGenerator( AmclWrapper *w )
   return w->uniformPoseGenerator();
 }
 
-
-
 AmclWrapper::AmclWrapper() :
         sent_first_transform_(false),
         latest_tf_valid_(false),
@@ -61,7 +59,7 @@ AmclWrapper::AmclWrapper() :
         first_reconfigure_call_(true),
         force_pose_publication_(false),
         force_update_(false),
-        laser_wrapper_(this, "~"),
+        laser_wrapper_(this, "~/laser"),
         map_wrapper_("~")
 {
   boost::recursive_mutex::scoped_lock l(global_mutex_);
@@ -166,8 +164,8 @@ AmclWrapper::AmclWrapper() :
   nomotion_update_srv_= nh_.advertiseService("request_nomotion_update", &AmclWrapper::nomotionUpdateCb, this);
 
   // dynamic reconfigure
-  dyn_reconf_srv_.reset( new dynamic_reconfigure::Server<amcl::AMCLConfig>(ros::NodeHandle("~")) );
-  dynamic_reconfigure::Server<amcl::AMCLConfig>::CallbackType cb = boost::bind(&AmclWrapper::dynamicReconfigureCb, this, _1, _2);
+  dyn_reconf_srv_.reset( new dynamic_reconfigure::Server<amcl_ros::AmclConfig>(ros::NodeHandle("~")) );
+  dynamic_reconfigure::Server<amcl_ros::AmclConfig>::CallbackType cb = boost::bind(&AmclWrapper::dynamicReconfigureCb, this, _1, _2);
   dyn_reconf_srv_->setCallback(cb);
   dyn_reconf_srv_->getConfigDefault(default_config_);
 
@@ -200,7 +198,7 @@ void AmclWrapper::resetSensorModels()
   laser_wrapper_.resetSensorModel();
 }
 
-void AmclWrapper::dynamicReconfigureCb(AMCLConfig &config, uint32_t level)
+void AmclWrapper::dynamicReconfigureCb(AmclConfig &config, uint32_t level)
 {
   boost::recursive_mutex::scoped_lock cfl(global_mutex_);
 

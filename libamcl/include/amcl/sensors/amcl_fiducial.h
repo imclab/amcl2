@@ -32,7 +32,7 @@
 #include "amcl/sensors/amcl_sensor.h"
 #include "amcl/map/map.h"
 #include "amcl/sensors/amcl_laser.h"
-#include "amcl/AMCLConfig.h"
+#include "amcl/AmclConfig.h"
 
 //#define PLAYER_FIDUCIAL_MAX_SAMPLES 100
 

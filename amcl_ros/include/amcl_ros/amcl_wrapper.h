@@ -58,12 +58,10 @@
 
 // Dynamic_reconfigure
 #include "dynamic_reconfigure/server.h"
-#include "amcl/AMCLConfig.h"
+#include "amcl_ros/AmclConfig.h"
 
 #include "amcl_ros/amcl_map_wrapper.h"
 #include "amcl_ros/amcl_laser_wrapper.h"
-
-using namespace amcl;
 
 // Pose hypothesis
 typedef struct
@@ -128,7 +126,7 @@ class AmclWrapper
 
     void initialPoseCb(const geometry_msgs::PoseWithCovarianceStampedConstPtr& msg);
 
-    void dynamicReconfigureCb(amcl::AMCLConfig &config, uint32_t level);
+    void dynamicReconfigureCb(amcl_ros::AmclConfig &config, uint32_t level);
 
     // reset the tf message filters, in case frame names have changed
     void resetTfMessageFilters();
@@ -187,8 +185,8 @@ class AmclWrapper
     ros::Subscriber initial_pose_sub_;
 
     // dynamic reconfigure
-    boost::shared_ptr< dynamic_reconfigure::Server<amcl::AMCLConfig> > dyn_reconf_srv_;
-    amcl::AMCLConfig default_config_;
+    boost::shared_ptr< dynamic_reconfigure::Server<amcl_ros::AmclConfig> > dyn_reconf_srv_;
+    amcl_ros::AmclConfig default_config_;
 
     // map / sensor models /////////////////////////////////////
 

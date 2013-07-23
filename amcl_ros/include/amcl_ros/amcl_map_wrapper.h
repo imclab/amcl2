@@ -44,9 +44,7 @@
 #include "nav_msgs/GetMap.h"
 
 // Dynamic_reconfigure
-#include "amcl/AMCLConfig.h"
-
-using namespace amcl;
+#include "amcl_ros/AmclConfig.h"
 
 namespace amcl_ros
 {

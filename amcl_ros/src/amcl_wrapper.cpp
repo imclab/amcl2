@@ -253,6 +253,10 @@ void AmclWrapper::dynamicReconfigureCb(AmclConfig &config, uint32_t level)
   recovery_alpha_slow_ = config.recovery_alpha_slow;
   recovery_alpha_fast_ = config.recovery_alpha_fast;
 
+  if ( particle_filter_ )
+  {
+    pf_free( particle_filter_ );
+  }
   particle_filter_ = pf_alloc(min_particles_, max_particles_,
                  recovery_alpha_slow_, recovery_alpha_fast_,
                  reinterpret_cast<pf_init_model_fn_t>(&amcl_ros::uniformPoseGenerator),
@@ -331,7 +335,13 @@ AmclWrapper::globalLocalizationCb(std_srvs::Empty::Request& req,
 {
   boost::recursive_mutex::scoped_lock ml(global_mutex_);
 
-  if( map_wrapper_.getMap() == NULL ) {
+  if( !map_wrapper_.getMap() ) {
+    ROS_ERROR("No map - cannot localize!");
+    return true;
+  }
+  if ( !particle_filter_.get() )
+  {
+    ROS_ERROR("Particle Filter not initialized - cannot localize!");
     return true;
   }
 
@@ -362,6 +372,10 @@ AmclWrapper::resetUpdateFlags( bool need_update )
 
 void AmclWrapper::initializeParticleFilter()
 {
+  if ( particle_filter_ )
+  {
+    pf_free( particle_filter_ );
+  }
   // Create the particle filter
   particle_filter_ = pf_alloc(min_particles_, max_particles_,
                  recovery_alpha_slow_, recovery_alpha_fast_,

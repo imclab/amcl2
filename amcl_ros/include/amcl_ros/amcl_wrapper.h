@@ -113,6 +113,8 @@ class AmclWrapper
     // the map
     pf_vector_t uniformPoseGenerator();
 
+    void onMapChanged();
+
   private:
 
     void initializeParticleFilter();

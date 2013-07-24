@@ -127,10 +127,29 @@ AmclLaserWrapper::~AmclLaserWrapper()
   freeMapDependentMemory();
 }
 
-void
-AmclLaserWrapper::freeMapDependentMemory()
+void AmclLaserWrapper::freeMapDependentMemory()
 {
   laser_.reset();
+}
+
+void AmclLaserWrapper::resetSensorModel()
+{
+  if ( ! parent_->getMap() )
+  {
+    ROS_ERROR("Cannot reset sensor model: no map loaded.");
+    return;
+  }
+  laser_.reset( new AMCLLaser(max_beams_, parent_->getMap()) );
+  if(laser_model_type_ == LASER_MODEL_BEAM)
+    laser_->SetModelBeam(laser_z_hit_, laser_z_short_, laser_z_max_, laser_z_rand_,
+                         laser_sigma_hit_, laser_lambda_short_, 0.0);
+  else
+  {
+    ROS_INFO("Initializing likelihood field model; this can take some time on large maps...");
+    laser_->SetModelLikelihoodField(laser_z_hit_, laser_z_rand_, laser_sigma_hit_,
+                                    laser_likelihood_max_dist_);
+    ROS_INFO("Done initializing likelihood field model.");
+  }
 }
 
 void
@@ -196,27 +215,6 @@ void AmclLaserWrapper::resetTfMessageFilters()
   laser_scan_filter_->registerCallback(boost::bind(&AmclLaserWrapper::laserCb,
                                                    this, _1));
 }
-
-void AmclLaserWrapper::resetSensorModel()
-{
-  if ( ! parent_->getMap() )
-  {
-    ROS_ERROR("Cannot reset sensor model: no map loaded.");
-    return;
-  }
-  laser_.reset( new AMCLLaser(max_beams_, parent_->getMap()) );
-  if(laser_model_type_ == LASER_MODEL_BEAM)
-    laser_->SetModelBeam(laser_z_hit_, laser_z_short_, laser_z_max_, laser_z_rand_,
-                         laser_sigma_hit_, laser_lambda_short_, 0.0);
-  else
-  {
-    ROS_INFO("Initializing likelihood field model; this can take some time on large maps...");
-    laser_->SetModelLikelihoodField(laser_z_hit_, laser_z_rand_, laser_sigma_hit_,
-                                    laser_likelihood_max_dist_);
-    ROS_INFO("Done initializing likelihood field model.");
-  }
-}
-
 
 void
 AmclLaserWrapper::laserCb(const sensor_msgs::LaserScanConstPtr& laser_scan)

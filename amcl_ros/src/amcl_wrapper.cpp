@@ -171,9 +171,7 @@ AmclWrapper::AmclWrapper() :
 
   resetTfMessageFilters();
 
-  map_wrapper_.mapChanged.connect( boost::bind( &AmclWrapper::resetSensorModels, this ) );
-  map_wrapper_.mapChanged.connect( boost::bind( &AmclWrapper::initializeParticleFilter, this ) );
-  map_wrapper_.mapChanged.connect( boost::bind( &AmclWrapper::applyInitialPose, this ) );
+  map_wrapper_.mapChanged.connect( boost::bind( &AmclWrapper::onMapChanged, this ) );
   map_wrapper_.init();
 }
 
@@ -182,11 +180,20 @@ AmclWrapper::~AmclWrapper()
   freeMapDependentMemory();
 }
 
+void AmclWrapper::onMapChanged()
+{
+  freeMapDependentMemory();
+  resetSensorModels();
+  initializeParticleFilter();
+  applyInitialPose();
+}
 
 void AmclWrapper::resetTfMessageFilters()
 {
   // this does a transformation in global_frame_id_ and should be recalled here
   initial_pose_sub_ = nh_.subscribe("initialpose", 2, &AmclWrapper::initialPoseCb, this);
+
+  laser_wrapper_.resetTfMessageFilters();
 }
 
 void AmclWrapper::resetSensorModels()
@@ -196,6 +203,16 @@ void AmclWrapper::resetSensorModels()
   odom_->SetModel( odom_model_type_, alpha1_, alpha2_, alpha3_, alpha4_, alpha5_ );
 
   laser_wrapper_.resetSensorModel();
+}
+
+void AmclWrapper::freeMapDependentMemory()
+{
+  if( particle_filter_ != NULL ) {
+    pf_free( particle_filter_ );
+    particle_filter_ = NULL;
+  }
+  odom_.reset();
+  laser_wrapper_.freeMapDependentMemory();
 }
 
 void AmclWrapper::dynamicReconfigureCb(AmclConfig &config, uint32_t level)
@@ -287,16 +304,6 @@ void AmclWrapper::dynamicReconfigureCb(AmclConfig &config, uint32_t level)
   resetSensorModels();
 }
 
-void
-AmclWrapper::freeMapDependentMemory()
-{
-  if( particle_filter_ != NULL ) {
-    pf_free( particle_filter_ );
-    particle_filter_ = NULL;
-  }
-  odom_.reset();
-}
-
 bool
 AmclWrapper::getOdomPose(tf::Stamped<tf::Pose>& odom_pose,
                       double& x, double& y, double& yaw,
@@ -339,7 +346,7 @@ AmclWrapper::globalLocalizationCb(std_srvs::Empty::Request& req,
     ROS_ERROR("No map - cannot localize!");
     return true;
   }
-  if ( !particle_filter_.get() )
+  if ( !particle_filter_ )
   {
     ROS_ERROR("Particle Filter not initialized - cannot localize!");
     return true;

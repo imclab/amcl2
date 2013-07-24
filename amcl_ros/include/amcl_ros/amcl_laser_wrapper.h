@@ -74,6 +74,11 @@ class AmclLaserWrapper
 
     void resetSensorModel();
 
+    void freeMapDependentMemory();
+
+    // reset the tf message filters, in case frame names have changed
+    void resetTfMessageFilters();
+
   private:
 
     void laserCb(const sensor_msgs::LaserScanConstPtr& laser_scan);
@@ -89,11 +94,6 @@ class AmclLaserWrapper
     // internal methods
 
     void handleMapMessage(const nav_msgs::OccupancyGrid& msg);
-
-    // reset the tf message filters, in case frame names have changed
-    void resetTfMessageFilters();
-
-    void freeMapDependentMemory();
 
     // Helper to get odometric pose from transform system
     bool getOdomPose(tf::Stamped<tf::Pose>& pose,

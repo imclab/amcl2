@@ -76,20 +76,20 @@ AmclLaserWrapper::AmclLaserWrapper( AmclWrapper* parent, std::string ns ) :
   parent_private_nh.param("odom_frame_id", odom_frame_id_, std::string("odom"));
   parent_private_nh.param("base_frame_id", base_frame_id_, std::string("base_link"));
 
-  private_nh_.param("laser_min_range", laser_min_range_, -1.0);
-  private_nh_.param("laser_max_range", laser_max_range_, -1.0);
-  private_nh_.param("laser_max_beams", max_beams_, 30);
+  private_nh_.param("min_range", laser_min_range_, -1.0);
+  private_nh_.param("max_range", laser_max_range_, -1.0);
+  private_nh_.param("max_beams", max_beams_, 30);
 
-  private_nh_.param("laser_z_hit", laser_z_hit_, 0.95);
-  private_nh_.param("laser_z_short", laser_z_short_, 0.1);
-  private_nh_.param("laser_z_max", laser_z_max_, 0.05);
-  private_nh_.param("laser_z_rand", laser_z_rand_, 0.05);
-  private_nh_.param("laser_sigma_hit", laser_sigma_hit_, 0.2);
-  private_nh_.param("laser_lambda_short", laser_lambda_short_, 0.1);
-  private_nh_.param("laser_likelihood_max_dist", laser_likelihood_max_dist_, 2.0);
+  private_nh_.param("z_hit", laser_z_hit_, 0.95);
+  private_nh_.param("z_short", laser_z_short_, 0.1);
+  private_nh_.param("z_max", laser_z_max_, 0.05);
+  private_nh_.param("z_rand", laser_z_rand_, 0.05);
+  private_nh_.param("sigma_hit", laser_sigma_hit_, 0.2);
+  private_nh_.param("lambda_short", laser_lambda_short_, 0.1);
+  private_nh_.param("likelihood_max_dist", laser_likelihood_max_dist_, 2.0);
 
   std::string tmp_model_type;
-  private_nh_.param("laser_model_type", tmp_model_type, std::string("likelihood_field"));
+  private_nh_.param("model_type", tmp_model_type, std::string("likelihood_field"));
   if(tmp_model_type == "beam")
     laser_model_type_ = LASER_MODEL_BEAM;
   else if(tmp_model_type == "likelihood_field")
@@ -183,22 +183,22 @@ void AmclLaserWrapper::dynamicReconfigureCb(AmclLaserConfig &config, uint32_t le
     config.restore_defaults = false;
   }
 
-  laser_min_range_ = config.laser_min_range;
-  laser_max_range_ = config.laser_max_range;
+  laser_min_range_ = config.min_range;
+  laser_max_range_ = config.max_range;
 
-  max_beams_ = config.laser_max_beams;
+  max_beams_ = config.max_beams;
 
-  laser_z_hit_ = config.laser_z_hit;
-  laser_z_short_ = config.laser_z_short;
-  laser_z_max_ = config.laser_z_max;
-  laser_z_rand_ = config.laser_z_rand;
-  laser_sigma_hit_ = config.laser_sigma_hit;
-  laser_lambda_short_ = config.laser_lambda_short;
-  laser_likelihood_max_dist_ = config.laser_likelihood_max_dist;
+  laser_z_hit_ = config.z_hit;
+  laser_z_short_ = config.z_short;
+  laser_z_max_ = config.z_max;
+  laser_z_rand_ = config.z_rand;
+  laser_sigma_hit_ = config.sigma_hit;
+  laser_lambda_short_ = config.lambda_short;
+  laser_likelihood_max_dist_ = config.likelihood_max_dist;
 
-  if(config.laser_model_type == "beam")
+  if(config.model_type == "beam")
     laser_model_type_ = LASER_MODEL_BEAM;
-  else if(config.laser_model_type == "likelihood_field")
+  else if(config.model_type == "likelihood_field")
     laser_model_type_ = LASER_MODEL_LIKELIHOOD_FIELD;
 
   resetTfMessageFilters();

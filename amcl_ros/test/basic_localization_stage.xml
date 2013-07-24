@@ -4,9 +4,9 @@ setting pose: 30.329 34.644 3.142
 <launch>
     <param name="/use_sim_time" value="true"/>
     <node name="rosbag" pkg="rosbag" type="play" 
-        args="-d 5 -r 1 --clock --hz 10 $(find amcl)/../../../build/navigation/amcl/test/basic_localization_stage_indexed.bag"/>
-    <node name="map_server" pkg="map_server" type="map_server" args="$(find amcl)/../../../build/navigation/amcl/test/willow-full.pgm 0.1"/>
-    <node pkg="amcl" type="amcl" name="amcl" respawn="false" output="screen">
+        args="-d 5 -r 1 --clock --hz 10 $(find amcl_ros)/test/basic_localization_stage_indexed.bag"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find amcl_ros)/test/willow-full.pgm 0.1"/>
+    <node pkg="amcl_ros" type="amcl" name="amcl" respawn="false" output="screen">
       <remap from="scan" to="base_scan" />
       <param name="transform_tolerance" value="0.2" />
       <param name="gui_publish_rate" value="10.0"/>
@@ -44,6 +44,6 @@ setting pose: 30.329 34.644 3.142
       <param name="initial_pose_y" value="21.421"/>
       <param name="initial_pose_a" value="-1.003"/>
     </node>
-  <test time-limit="180" test-name="basic_localization_stage" pkg="amcl" 
+  <test time-limit="180" test-name="basic_localization_stage" pkg="amcl_ros" 
         type="basic_localization.py" args="0 47.060 21.603 -1.053 0.75 0.75 90.0"/>
 </launch>

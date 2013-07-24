@@ -1,19 +1,19 @@
 <!-- setting pose: 47.943 21.421 -0.503
-setting pose: 30.329 34.644 3.142 
+setting pose: 30.329 34.644 3.142
+launch-prefix="gdb -ex run --ex q --args"  
 117.5s -->
 <launch>
     <param name="/use_sim_time" value="true"/>
     <node name="rosbag" pkg="rosbag" type="play" 
-        args="-d 5 -r 1 --clock --hz 10 $(find amcl)/../../../build/navigation/amcl/test/global_localization_stage_indexed.bag"/>
-    <node name="map_server" pkg="map_server" type="map_server" args="$(find amcl)/../../../build/navigation/amcl/test/willow-full.pgm 0.1"/>
-    <node pkg="amcl" type="amcl" name="amcl" respawn="false" output="screen">
+        args="-d 15 -r 1 --clock --hz 10 $(find amcl_ros)/test/global_localization_stage_indexed.bag"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find amcl_ros)/test/willow-full.pgm 0.1"/>
+    <node pkg="amcl_ros" type="amcl" name="amcl" respawn="false" output="screen">
       <remap from="scan" to="base_scan" />
       <param name="transform_tolerance" value="0.2" />
       <param name="gui_publish_rate" value="10.0"/>
       <param name="save_pose_rate" value="0.5"/>
-      <param name="laser_max_beams" value="30"/>
       <param name="min_particles" value="500"/>
-      <param name="max_particles" value="5000"/>
+      <param name="max_particles" value="10000"/>
       <param name="kld_err" value="0.05"/>
       <param name="kld_z" value="0.99"/>
       <param name="odom_model_type" value="omni"/>
@@ -23,16 +23,17 @@ setting pose: 30.329 34.644 3.142
       <param name="odom_alpha3" value="0.8"/>
       <param name="odom_alpha4" value="0.2"/>
       <param name="odom_alpha5" value="0.1"/>
-      <param name="laser_z_hit" value="0.5"/>
-      <param name="laser_z_short" value="0.05"/>
-      <param name="laser_z_max" value="0.05"/>
-      <param name="laser_z_rand" value="0.5"/>
-      <param name="laser_sigma_hit" value="0.2"/>
-      <param name="laser_lambda_short" value="0.1"/>
-      <param name="laser_lambda_short" value="0.1"/>
-      <param name="laser_model_type" value="likelihood_field"/>
-      <!-- <param name="laser_model_type" value="beam"/> -->
-      <param name="laser_likelihood_max_dist" value="2.0"/>
+      <param name="laser/max_beams" value="30"/>
+      <param name="laser/z_hit" value="0.5"/>
+      <param name="laser/z_short" value="0.05"/>
+      <param name="laser/z_max" value="0.05"/>
+      <param name="laser/z_rand" value="0.5"/>
+      <param name="laser/sigma_hit" value="0.2"/>
+      <param name="laser/lambda_short" value="0.1"/>
+      <param name="laser/lambda_short" value="0.1"/>
+      <param name="laser/model_type" value="likelihood_field"/>
+      <!-- <param name="laser/model_type" value="beam"/> -->
+      <param name="laser/likelihood_max_dist" value="2.0"/>
       <param name="update_min_d" value="0.2"/>
       <param name="update_min_a" value="0.5"/>
       <param name="odom_frame_id" value="odom"/>
@@ -44,6 +45,6 @@ setting pose: 30.329 34.644 3.142
       <param name="robot_y_start" value="0.0"/>
       <param name="robot_th_start" value="0.0"/>
     </node>
-  <test time-limit="180" test-name="global_localization_stage" pkg="amcl" 
+  <test time-limit="180" test-name="global_localization_stage" pkg="amcl_ros" 
         type="basic_localization.py" args="1 46.519 21.384 3.099 0.25 0.25 28.0"/>
 </launch>

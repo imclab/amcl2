@@ -115,6 +115,8 @@ class AmclWrapper
 
     void onMapChanged();
 
+    boost::recursive_mutex& getMutex() { return global_mutex_; }
+
   private:
 
     void initializeParticleFilter();
@@ -222,12 +224,12 @@ class AmclWrapper
 
     bool first_reconfigure_call_;
 
-    // global mutex. should be locked within any ros callback
-    boost::recursive_mutex global_mutex_;
-
     AmclMapWrapper map_wrapper_;
 
     AmclLaserWrapper laser_wrapper_;
+
+    // global mutex. should be locked within any ros callback
+    boost::recursive_mutex global_mutex_;
 };
 
 }

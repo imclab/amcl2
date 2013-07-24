@@ -155,6 +155,8 @@ void AmclLaserWrapper::resetSensorModel()
 void
 AmclLaserWrapper::checkLaserCb(const ros::TimerEvent& event)
 {
+  boost::recursive_mutex::scoped_lock l(parent_->getMutex());
+
   ros::Duration d = ros::Time::now() - last_laser_received_time_;
   if(d > laser_check_interval_)
   {
@@ -168,6 +170,8 @@ AmclLaserWrapper::checkLaserCb(const ros::TimerEvent& event)
 
 void AmclLaserWrapper::dynamicReconfigureCb(AmclLaserConfig &config, uint32_t level)
 {
+  boost::recursive_mutex::scoped_lock l(parent_->getMutex());
+
   //we don't want to do anything on the first call
   //which corresponds to startup
   if(first_reconfigure_call_)
@@ -219,6 +223,8 @@ void AmclLaserWrapper::resetTfMessageFilters()
 void
 AmclLaserWrapper::laserCb(const sensor_msgs::LaserScanConstPtr& laser_scan)
 {
+  boost::recursive_mutex::scoped_lock l(parent_->getMutex());
+
   last_laser_received_time_ = ros::Time::now();
 
   // First time we receive a laser message?
